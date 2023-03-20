@@ -1,0 +1,15 @@
+.env
+.env.dev
+node_modules/*
+dist/**/*
+dbSchema/*
+exclude/*
+*.json
+log/*
+*.log
+json/*
+src/temp/*
+static/**/*
+*.png
+*.jpg
+*.mp4
