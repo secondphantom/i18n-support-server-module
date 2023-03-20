@@ -7,8 +7,8 @@ interface TranslateRepoInterface {
     sentence: string;
     from: string;
     to: string;
-  }) => {
+  }) => Promise<{
     locale: string;
-    result: string;
-  };
+    sentence: string;
+  }>;
 }
