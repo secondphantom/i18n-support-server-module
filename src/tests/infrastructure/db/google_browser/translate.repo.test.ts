@@ -3,14 +3,17 @@ import { GoogleTranslateRepo } from "../../../../infrastructure/db/google_browse
 describe("Google Browser Crawler Repo Test", () => {
   let translateRepo: GoogleTranslateRepo;
   beforeAll(async () => {
-    translateRepo = await GoogleTranslateRepo.getInstance({
-      headless: true,
-    });
+    translateRepo = await GoogleTranslateRepo.getInstance(
+      { concurrency: 1 },
+      {
+        headless: true,
+      }
+    );
   });
 
   afterAll(async () => {
     translateRepo.close();
-  });
+  }, 10000);
 
   test("Translate Sentence", async () => {
     const params = {
