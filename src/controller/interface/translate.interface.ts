@@ -6,7 +6,7 @@ import {
 } from "@src/application/service/translate/translate.service";
 import { ResponseDto } from "../dto/response.dto";
 
-export interface TranslateForwardProxyInterface {
+export interface TranslateProxyInterface {
   translateSentence: (dto: Sentence) => Promise<ResponseDto>;
 
   translateMultiSentence: (dto: SentenceWithKey[]) => Promise<ResponseDto>;

@@ -6,14 +6,14 @@ import {
   TranslateService,
 } from "@src/application/service/translate/translate.service";
 import { ResponseDto } from "../dto/response.dto";
-import { TranslateForwardProxyInterface } from "../interface/translate.interface";
+import { TranslateProxyInterface } from "../interface/translate.interface";
 
-export class TranslateController implements TranslateForwardProxyInterface {
+export class TranslateController implements TranslateProxyInterface {
   static instance: TranslateController | undefined;
 
   constructor(private translateService: TranslateService) {}
 
-  static getInstance = async (translateService: TranslateService) => {
+  static getInstance = (translateService: TranslateService) => {
     if (this.instance) return this.instance;
     this.instance = new TranslateController(translateService);
     return this.instance;

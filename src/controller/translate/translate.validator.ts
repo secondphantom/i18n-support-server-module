@@ -7,21 +7,21 @@ import {
 import { ResponseDto } from "../dto/response.dto";
 import { TranslateController } from "./translate.controller";
 import {
-  TranslateForwardProxyInterface,
+  TranslateProxyInterface,
   TranslateValidatorInterface,
 } from "../interface/translate.interface";
 
-export class TranslateValidator implements TranslateForwardProxyInterface {
+export class TranslateValidator implements TranslateProxyInterface {
   static instance: TranslateValidator | undefined;
 
   constructor(
     private translateValidator: TranslateValidatorInterface,
-    private translateController: TranslateForwardProxyInterface
+    private translateController: TranslateProxyInterface
   ) {}
 
   static getInstance = async (
     translateValidator: TranslateValidatorInterface,
-    translateController: TranslateForwardProxyInterface
+    translateController: TranslateProxyInterface
   ) => {
     if (this.instance) return this.instance;
     this.instance = new TranslateValidator(

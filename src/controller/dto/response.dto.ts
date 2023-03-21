@@ -23,6 +23,10 @@ export class ResponseDto<T = any> {
     return this._status;
   }
 
+  get payload() {
+    return this._payload;
+  }
+
   getJson = () => {
     return JSON.stringify(this._payload);
   };
