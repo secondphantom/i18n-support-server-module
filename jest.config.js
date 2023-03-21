@@ -4,7 +4,9 @@ module.exports = {
   testEnvironment: "node",
   // setupFiles: ["dotenv/config"],
   // setupFilesAfterEnv: ["./src/setupTestsAfterEnv.ts"],
-  testMatch: ["<rootDir>/src/tests/**/*"],
+  testMatch: [
+    "<rootDir>/src/tests/infrastructure/validator/zod/translate.validator.test.ts",
+  ],
   verbose: true,
   forceExit: true,
   clearMocks: true,

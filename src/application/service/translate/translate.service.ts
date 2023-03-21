@@ -57,9 +57,9 @@ export class TranslateService {
   };
 
   translateMultiSentence = async (
-    dtoAry: SentenceWithKey[]
+    dto: SentenceWithKey[]
   ): Promise<TranslateReturnWithKey[]> => {
-    const resultAry = await this.translateRepo.translateMultiSentence(dtoAry);
+    const resultAry = await this.translateRepo.translateMultiSentence(dto);
     return resultAry;
   };
 
