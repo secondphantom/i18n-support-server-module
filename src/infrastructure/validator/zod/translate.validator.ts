@@ -39,7 +39,7 @@ export class TranslateValidator implements TranslateValidatorInterface {
         sentence: z.string().min(1),
         from: z.string().min(2).max(5),
         to: z.string().min(2).max(5),
-        key: z.string().min(1),
+        key: z.optional(z.string().min(1)),
       })
     )
     .min(1);
@@ -53,7 +53,7 @@ export class TranslateValidator implements TranslateValidatorInterface {
       .array(
         z.object({
           sentence: z.string().min(1),
-          key: z.string().min(1),
+          key: z.optional(z.string().min(1)),
         })
       )
       .min(1),

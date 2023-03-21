@@ -11,20 +11,20 @@ import {
   TranslateValidatorInterface,
 } from "../interface/translate.interface";
 
-export class TranslateValidator implements TranslateProxyInterface {
-  static instance: TranslateValidator | undefined;
+export class TranslateProxyValidator implements TranslateProxyInterface {
+  static instance: TranslateProxyValidator | undefined;
 
   constructor(
     private translateValidator: TranslateValidatorInterface,
     private translateController: TranslateProxyInterface
   ) {}
 
-  static getInstance = async (
+  static getInstance = (
     translateValidator: TranslateValidatorInterface,
     translateController: TranslateProxyInterface
   ) => {
     if (this.instance) return this.instance;
-    this.instance = new TranslateValidator(
+    this.instance = new TranslateProxyValidator(
       translateValidator,
       translateController
     );

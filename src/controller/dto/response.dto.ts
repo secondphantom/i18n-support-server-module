@@ -28,6 +28,6 @@ export class ResponseDto<T = any> {
   }
 
   getJson = () => {
-    return JSON.stringify(this._payload);
+    return this._payload;
   };
 }

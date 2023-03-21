@@ -37,7 +37,7 @@ export class TranslateService {
 
   constructor(private translateRepo: TranslateRepo) {}
 
-  static getInstance = async (translateRepo: TranslateRepo) => {
+  static getInstance = (translateRepo: TranslateRepo) => {
     if (this.instance) return this.instance;
     this.instance = new TranslateService(translateRepo);
     return this.instance;
