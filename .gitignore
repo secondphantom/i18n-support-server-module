@@ -14,3 +14,4 @@ static/**/*
 *.png
 *.jpg
 *.mp4
+src/temp/**/*

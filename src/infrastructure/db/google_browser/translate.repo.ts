@@ -1,7 +1,11 @@
+import "module-alias/register";
 import { TranslateRepo } from "@src/application/interfaces/translate.repo";
 import {
   Sentence,
+  SentenceWithKey,
+  TranslateMultiLanguageDto,
   TranslateReturn,
+  TranslateReturnWithKey,
 } from "@src/application/service/translate/translate.service";
 import {
   Browser,
@@ -13,6 +17,7 @@ import {
 
 interface Options {
   concurrency: number;
+  lockDelayMs?: number;
 }
 
 interface PageWithLock {
@@ -24,7 +29,6 @@ interface PageWithLock {
 export class GoogleTranslateRepo extends TranslateRepo {
   static instance: GoogleTranslateRepo | undefined;
   private pageWithLockAry: PageWithLock[] = [];
-  private LOCK_DELAY_MS = 1000;
 
   private browser: Browser | undefined;
   private context: BrowserContext | undefined;
@@ -35,8 +39,10 @@ export class GoogleTranslateRepo extends TranslateRepo {
     private launchOptions?: LaunchOptions
   ) {
     super();
+
     this.options = {
       concurrency: 1,
+      lockDelayMs: 15000,
       ...options,
     };
     this.pageWithLockAry = Array.from(
@@ -88,7 +94,7 @@ export class GoogleTranslateRepo extends TranslateRepo {
     return new Promise((res, rej) => {
       setTimeout(() => {
         res(null);
-      }, this.LOCK_DELAY_MS);
+      }, this.options?.lockDelayMs);
     });
   };
 
@@ -127,5 +133,67 @@ export class GoogleTranslateRepo extends TranslateRepo {
       throw new Error("Fail to translate");
     }
     return result;
+  };
+
+  translateMultiLanguage = async (
+    dao: TranslateMultiLanguageDto
+  ): Promise<TranslateReturnWithKey[][]> => {
+    const { sentenceAry, from, to } = dao;
+
+    const promiseAry = to.map<Promise<TranslateReturnWithKey[]>>((toLocale) => {
+      return new Promise(async (resolve) => {
+        const sentenceInputAry = sentenceAry.map(
+          ({ sentence, key }) => sentence
+        );
+        const { sentence: translatedSentence } = await this.translate({
+          sentence: sentenceInputAry.join("\n"),
+          from,
+          to: toLocale,
+        });
+        const sentenceResult =
+          this.getTranslatedSentenceAryToSentenceWithKeyAry(
+            translatedSentence.split("\n"),
+            sentenceAry,
+            toLocale
+          );
+        resolve(sentenceResult);
+      });
+    });
+    const multiSentenceResultAry = await Promise.all(promiseAry);
+
+    return multiSentenceResultAry;
+  };
+
+  private getTranslatedSentenceAryToSentenceWithKeyAry = (
+    translatedSentenceAry: string[],
+    sentenceAry: {
+      sentence: string;
+      key: string;
+    }[],
+    locale: string
+  ) => {
+    const result = sentenceAry.map(({ key }, index) => {
+      return {
+        key,
+        sentence: translatedSentenceAry[index],
+        locale,
+      };
+    });
+    return result;
+  };
+
+  static test = async () => {
+    const translateRepo = await GoogleTranslateRepo.getInstance(
+      { concurrency: 1 },
+      { headless: false }
+    );
+    const result = await translateRepo.translateMultiLanguage({
+      sentenceAry: [
+        { sentence: "hello", key: "hello" },
+        { sentence: "number", key: "number" },
+      ],
+      from: "en",
+      to: ["ko"],
+    });
   };
 }

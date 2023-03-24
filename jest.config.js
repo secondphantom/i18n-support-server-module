@@ -4,9 +4,7 @@ module.exports = {
   testEnvironment: "node",
   // setupFiles: ["dotenv/config"],
   // setupFilesAfterEnv: ["./src/setupTestsAfterEnv.ts"],
-  testMatch: [
-    "<rootDir>/src/tests/controller/translate/translate.controller.test.ts",
-  ],
+  testMatch: ["<rootDir>/src/tests/**/*"],
   verbose: true,
   forceExit: true,
   clearMocks: true,
