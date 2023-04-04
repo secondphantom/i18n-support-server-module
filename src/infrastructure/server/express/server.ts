@@ -64,7 +64,7 @@ export class ExpressServer {
     this.app.use("/translate", this.translateRouter);
 
     this.languageCodeRouter = Router({ mergeParams: true });
-    this.app.use("/language-code", this.translateRouter);
+    this.app.use("/language-code", this.languageCodeRouter);
 
     this.app.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {
@@ -166,20 +166,17 @@ export class ExpressServer {
     this.languageCodeRouter.post(
       "/name/multi",
       async (req: Request, res: Response, next: NextFunction) => {
+        const { type } = req.query;
+        if (type === "keynamevalue") {
+          const response =
+            await this.languageCodeController!.getMultiCodeToKeyNameValue(
+              req.body
+            );
+          return this.createResponse(response, res);
+        }
         const response = await this.languageCodeController!.getMultiName(
           req.body
         );
-        return this.createResponse(response, res);
-      }
-    );
-
-    this.languageCodeRouter.post(
-      "/name/multi?type=keynamevalue",
-      async (req: Request, res: Response, next: NextFunction) => {
-        const response =
-          await this.languageCodeController!.getMultiCodeToKeyNameValue(
-            req.body
-          );
         return this.createResponse(response, res);
       }
     );
