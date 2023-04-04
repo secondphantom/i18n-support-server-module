@@ -1,4 +1,4 @@
-import { GoogleTranslateRepo } from "../../../../infrastructure/db/google_browser/translate.repo";
+import { GoogleTranslateRepo } from "../../../../infrastructure/db/translate/google_browser/translate.repo";
 
 describe("Google Browser Crawler Repo Test", () => {
   let translateRepo: GoogleTranslateRepo;

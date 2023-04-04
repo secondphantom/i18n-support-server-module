@@ -3,7 +3,7 @@ import { TranslateService } from "@src/application/service/translate/translate.s
 import { TranslateController } from "@src/controller/translate/translate.controller";
 import { TranslateProxyValidator } from "@src/controller/translate/translate.validator";
 import { TranslateValidator } from "../../validator/zod/translate.validator";
-import { GoogleTranslateRepo } from "@src/infrastructure/db/google_browser/translate.repo";
+import { GoogleTranslateRepo } from "@src/infrastructure/db/translate/google_browser/translate.repo";
 import { ResponseDto } from "@src/controller/dto/response.dto";
 import express, {
   NextFunction,
@@ -23,12 +23,18 @@ import { LanguageCodeNameRepo } from "@src/application/interfaces/languageCode/n
 import { LocalLanguageCodeNameRepo } from "@src/infrastructure/db/languageCode/name.repo";
 import { LocalLanguageCodeSiteMapRepo } from "@src/infrastructure/db/languageCode/sitemap.repo";
 import { LanguageCodeService } from "@src/application/service/languageCode/language.code.service";
+import { TranslateRepoFactory } from "@src/infrastructure/db/translate/translate.repo.factory";
+import { TranslateRepo } from "@src/application/interfaces/translate/translate.repo";
 
 export interface ExpressServerOptions {
   port: number;
   corsOptions: {
     origin: string;
   };
+}
+
+export interface RepoInstance {
+  translateRepo: TranslateRepo;
 }
 
 export class ExpressServer {
@@ -75,16 +81,11 @@ export class ExpressServer {
     );
   }
 
-  private init = async () => {
+  private init = async ({ translateRepo }: RepoInstance) => {
     this.translateController = TranslateProxyValidator.getInstance(
       TranslateValidator.getInstance(),
       TranslateController.getInstance(
-        TranslateService.getInstance(
-          await GoogleTranslateRepo.getInstance(
-            { concurrency: this.options.repo.concurrency },
-            { headless: this.options.repo.headless }
-          )
-        )
+        TranslateService.getInstance(translateRepo)
       )
     );
     this.initTranslateRoute();
@@ -104,10 +105,13 @@ export class ExpressServer {
     this.server = this.app.listen(this.options.port);
   };
 
-  static getInstance = async (options: typeof config) => {
+  static getInstance = async (
+    repoInstance: RepoInstance,
+    options: typeof config
+  ) => {
     if (this.instance) return this.instance;
     this.instance = new ExpressServer(options);
-    await this.instance.init();
+    await this.instance.init(repoInstance);
     return this.instance;
   };
 
