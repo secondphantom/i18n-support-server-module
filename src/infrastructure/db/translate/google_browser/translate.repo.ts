@@ -135,6 +135,24 @@ export class GoogleTranslateRepo extends TranslateRepo {
     return result;
   };
 
+  translateMultiSentence = async (
+    daoAry: SentenceWithKey[]
+  ): Promise<TranslateReturnWithKey[]> => {
+    const promiseAry = daoAry.map<Promise<TranslateReturnWithKey>>(
+      ({ key, ...res }) => {
+        return new Promise(async (resolve, reject) => {
+          const result = await this.translate(res).then((res) => ({
+            key,
+            ...res,
+          }));
+          resolve(result);
+        });
+      }
+    );
+    const resultAry = await Promise.all(promiseAry);
+    return resultAry;
+  };
+
   translateMultiLanguage = async (
     dao: TranslateMultiLanguageDto
   ): Promise<TranslateReturnWithKey[][]> => {

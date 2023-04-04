@@ -4,7 +4,9 @@ module.exports = {
   testEnvironment: "node",
   // setupFiles: ["dotenv/config"],
   // setupFilesAfterEnv: ["./src/setupTestsAfterEnv.ts"],
-  testMatch: ["<rootDir>/src/tests/api/server/express.server.test.ts"],
+  testMatch: [
+    "<rootDir>/src/tests/infrastructure/db/google_browser/translate.repo.test.ts",
+  ],
   verbose: true,
   forceExit: true,
   clearMocks: true,

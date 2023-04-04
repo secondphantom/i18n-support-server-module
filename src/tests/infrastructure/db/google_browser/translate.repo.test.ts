@@ -25,10 +25,12 @@ describe("Google Browser Crawler Repo Test", () => {
     const result = await translateRepo.translate(params);
     const { locale } = result;
 
-    expect.objectContaining<typeof result>({
-      locale: expect.any(String),
-      sentence: expect.any(String),
-    });
+    expect(result).toEqual(
+      expect.objectContaining({
+        locale: expect.any(String),
+        sentence: expect.any(String),
+      })
+    );
     expect(params.to).toEqual(locale);
-  });
+  }, 10000);
 });
