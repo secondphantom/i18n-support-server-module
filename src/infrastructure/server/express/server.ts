@@ -25,6 +25,7 @@ import { LocalLanguageCodeSiteMapRepo } from "@src/infrastructure/db/languageCod
 import { LanguageCodeService } from "@src/application/service/languageCode/language.code.service";
 import { TranslateRepoFactory } from "@src/infrastructure/db/translate/translate.repo.factory";
 import { TranslateRepo } from "@src/application/interfaces/translate/translate.repo";
+import { ServerClass } from "../server.interface";
 
 export interface ExpressServerOptions {
   port: number;
@@ -37,7 +38,7 @@ export interface RepoInstance {
   translateRepo: TranslateRepo;
 }
 
-export class ExpressServer {
+export class ExpressServer extends ServerClass {
   static instance: ExpressServer | undefined;
   private app: Express;
   private translateRouter: Router;
@@ -58,6 +59,7 @@ export class ExpressServer {
   };
 
   constructor(private options: typeof config) {
+    super();
     this.corsOption.origin = options.cors.allowedOrigin;
 
     this.app = express();

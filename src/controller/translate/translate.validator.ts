@@ -34,13 +34,13 @@ export class TranslateProxyValidator implements TranslateProxyInterface {
   translateSentence = async (dto: Sentence) => {
     try {
       await this.translateValidator.translateSentence(dto);
-    } catch (error) {
+    } catch (error: any) {
       return new ResponseDto({
         status: 400,
         payload: {
           success: false,
           data: {
-            message: "Invalid Input",
+            message: error.message,
           },
         },
       });
