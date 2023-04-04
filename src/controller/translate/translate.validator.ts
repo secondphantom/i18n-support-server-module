@@ -9,7 +9,7 @@ import { TranslateController } from "./translate.controller";
 import {
   TranslateProxyInterface,
   TranslateValidatorInterface,
-} from "../interface/translate.interface";
+} from "./translate.interface";
 
 export class TranslateProxyValidator implements TranslateProxyInterface {
   static instance: TranslateProxyValidator | undefined;

@@ -4,7 +4,7 @@ import {
   TranslateMultiLanguageDto,
   TranslateReturn,
   TranslateReturnWithKey,
-} from "../service/translate/translate.service";
+} from "../../service/translate/translate.service";
 
 export abstract class TranslateRepo {
   translate = async (dao: Sentence): Promise<TranslateReturn> => ({

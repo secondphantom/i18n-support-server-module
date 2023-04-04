@@ -1,27 +1,29 @@
 import {
-  Sentence,
-  SentenceWithKey,
-  TranslateJsonValueDto,
-  TranslateMultiLanguageDto,
-  TranslateService,
-} from "@src/application/service/translate/translate.service";
+  LanguageCodeWithOptions,
+  LanguageCodeWithName,
+  MultiLanguageCodeWithOptions,
+  LanguageCodeKeyWithName,
+  LanguageCodeSiteMapInputs,
+  LanguageCodeSiteMapReturn,
+  LanguageCodeService,
+} from "@src/application/service/languageCode/language.code.service";
+import { LanguageCodeProxyInterface } from "./language.code.interface";
 import { ResponseDto } from "../dto/response.dto";
-import { TranslateProxyInterface } from "./translate.interface";
 
-export class TranslateController implements TranslateProxyInterface {
-  static instance: TranslateController | undefined;
+export class LanguageCodeController implements LanguageCodeProxyInterface {
+  static instance: LanguageCodeController | undefined;
 
-  constructor(private translateService: TranslateService) {}
+  constructor(private languageCodeService: LanguageCodeService) {}
 
-  static getInstance = (translateService: TranslateService) => {
+  static getInstance = (languageCodeService: LanguageCodeService) => {
     if (this.instance) return this.instance;
-    this.instance = new TranslateController(translateService);
+    this.instance = new LanguageCodeController(languageCodeService);
     return this.instance;
   };
 
-  translateSentence = async (dto: Sentence) => {
+  getName = async (dto: LanguageCodeWithOptions) => {
     try {
-      const result = await this.translateService.translateSentence(dto);
+      const result = await this.languageCodeService.getName(dto);
       return new ResponseDto<typeof result>({
         status: 200,
         payload: { success: true, data: result },
@@ -39,9 +41,30 @@ export class TranslateController implements TranslateProxyInterface {
     }
   };
 
-  translateMultiSentence = async (dto: SentenceWithKey[]) => {
+  getMultiName = async (dto: MultiLanguageCodeWithOptions) => {
     try {
-      const result = await this.translateService.translateMultiSentence(dto);
+      const result = await this.languageCodeService.getMultiName(dto);
+      return new ResponseDto<typeof result>({
+        status: 200,
+        payload: { success: true, data: result },
+      });
+    } catch (error) {
+      return new ResponseDto({
+        status: 400,
+        payload: {
+          success: false,
+          data: {
+            message: "Bad Request",
+          },
+        },
+      });
+    }
+  };
+  getMultiCodeToKeyNameValue = async (dto: MultiLanguageCodeWithOptions) => {
+    try {
+      const result = await this.languageCodeService.getMultiCodeToKeyNameValue(
+        dto
+      );
       return new ResponseDto<typeof result>({
         status: 200,
         payload: { success: true, data: result },
@@ -59,29 +82,9 @@ export class TranslateController implements TranslateProxyInterface {
     }
   };
 
-  translateMultiLanguage = async (dto: TranslateMultiLanguageDto) => {
+  getSiteMap = async (dto: LanguageCodeSiteMapInputs) => {
     try {
-      const result = await this.translateService.translateMultiLanguage(dto);
-      return new ResponseDto<typeof result>({
-        status: 200,
-        payload: { success: true, data: result },
-      });
-    } catch (error) {
-      return new ResponseDto({
-        status: 400,
-        payload: {
-          success: false,
-          data: {
-            message: "Bad Request",
-          },
-        },
-      });
-    }
-  };
-
-  translateJsonValue = async (dto: TranslateJsonValueDto) => {
-    try {
-      const result = await this.translateService.translateJsonValue(dto);
+      const result = await this.languageCodeService.getSiteMap(dto);
       return new ResponseDto<typeof result>({
         status: 200,
         payload: { success: true, data: result },

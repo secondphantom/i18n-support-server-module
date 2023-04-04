@@ -1,5 +1,5 @@
 import "module-alias/register";
-import { TranslateRepo } from "@src/application/interfaces/translate.repo";
+import { TranslateRepo } from "@src/application/interfaces/translate/translate.repo";
 
 export interface Sentence {
   sentence: string;

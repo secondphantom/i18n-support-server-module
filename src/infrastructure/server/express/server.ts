@@ -16,6 +16,13 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { config } from "@src/infrastructure/config";
+import { LanguageCodeController } from "@src/controller/languageCode/language.code.controller";
+import { LanguageCodeValidator } from "@src/infrastructure/validator/zod/language.code.validator";
+import { LanguageCodeProxyValidator } from "@src/controller/languageCode/language.code.validator";
+import { LanguageCodeNameRepo } from "@src/application/interfaces/languageCode/name.repo";
+import { LocalLanguageCodeNameRepo } from "@src/infrastructure/db/languageCode/name.repo";
+import { LocalLanguageCodeSiteMapRepo } from "@src/infrastructure/db/languageCode/sitemap.repo";
+import { LanguageCodeService } from "@src/application/service/languageCode/language.code.service";
 
 export interface ExpressServerOptions {
   port: number;
@@ -29,13 +36,15 @@ export class ExpressServer {
   private app: Express;
   private translateRouter: Router;
   private translateController: TranslateProxyValidator | undefined;
+  private languageCodeRouter: Router;
+  private languageCodeController: LanguageCodeProxyValidator | undefined;
+
   private server:
     | import("http").Server<
         typeof import("http").IncomingMessage,
         typeof import("http").ServerResponse
       >
     | undefined;
-
   private corsOption = {
     origin: "*",
     optionsSuccessStatus: 200,
@@ -53,6 +62,10 @@ export class ExpressServer {
 
     this.translateRouter = Router({ mergeParams: true });
     this.app.use("/translate", this.translateRouter);
+
+    this.languageCodeRouter = Router({ mergeParams: true });
+    this.app.use("/language-code", this.translateRouter);
+
     this.app.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {
         res
@@ -75,6 +88,18 @@ export class ExpressServer {
       )
     );
     this.initTranslateRoute();
+
+    this.languageCodeController = LanguageCodeProxyValidator.getInstance(
+      LanguageCodeValidator.getInstance(),
+      LanguageCodeController.getInstance(
+        LanguageCodeService.getInstance(
+          LocalLanguageCodeNameRepo.getInstance(),
+          LocalLanguageCodeSiteMapRepo.getInstance()
+        )
+      )
+    );
+
+    this.initLanguageCodeRoute();
 
     this.server = this.app.listen(this.options.port);
   };
@@ -122,6 +147,47 @@ export class ExpressServer {
       "/sentence/multi/language/json",
       async (req: Request, res: Response, next: NextFunction) => {
         const response = await this.translateController!.translateJsonValue(
+          req.body
+        );
+        return this.createResponse(response, res);
+      }
+    );
+  };
+
+  private initLanguageCodeRoute = () => {
+    this.languageCodeRouter.post(
+      "/name",
+      async (req: Request, res: Response, next: NextFunction) => {
+        const response = await this.languageCodeController!.getName(req.body);
+        return this.createResponse(response, res);
+      }
+    );
+
+    this.languageCodeRouter.post(
+      "/name/multi",
+      async (req: Request, res: Response, next: NextFunction) => {
+        const response = await this.languageCodeController!.getMultiName(
+          req.body
+        );
+        return this.createResponse(response, res);
+      }
+    );
+
+    this.languageCodeRouter.post(
+      "/name/multi?type=keynamevalue",
+      async (req: Request, res: Response, next: NextFunction) => {
+        const response =
+          await this.languageCodeController!.getMultiCodeToKeyNameValue(
+            req.body
+          );
+        return this.createResponse(response, res);
+      }
+    );
+
+    this.languageCodeRouter.post(
+      "/sitemap",
+      async (req: Request, res: Response, next: NextFunction) => {
+        const response = await this.languageCodeController!.getSiteMap(
           req.body
         );
         return this.createResponse(response, res);

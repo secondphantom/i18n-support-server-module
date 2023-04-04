@@ -2,8 +2,8 @@ import {
   TranslateJsonValueDto,
   TranslateReturnWithKey,
   TranslateService,
-} from "../../../application/service/translate/translate.service";
-import { GoogleTranslateRepo } from "../../../infrastructure/db/google_browser/translate.repo";
+} from "../../../../application/service/translate/translate.service";
+import { GoogleTranslateRepo } from "../../../../infrastructure/db/google_browser/translate.repo";
 
 describe("Translate Service Test", () => {
   let translateService: TranslateService;

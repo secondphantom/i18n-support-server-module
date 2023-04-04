@@ -5,7 +5,7 @@ import {
   TranslateJsonValueDto,
 } from "@src/application/service/translate/translate.service";
 import { z } from "zod";
-import { TranslateValidatorInterface } from "@src/controller/interface/translate.interface";
+import { TranslateValidatorInterface } from "@src/controller/translate/translate.interface";
 
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 type Literal = z.infer<typeof literalSchema>;
