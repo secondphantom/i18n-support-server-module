@@ -86,20 +86,4 @@ export class LocalLanguageCodeNameRepo extends LanguageCodeNameRepo {
       return this.getName({ code, options });
     });
   };
-
-  getMultiCodeToKeyNameValue = ({
-    codeList,
-    options,
-  }: MultiLanguageCodeWithOptions) => {
-    const multipleLanguageNameList = this.getMultiName({ codeList, options });
-    const result: { [key in string]: string } = {};
-    return multipleLanguageNameList.reduce((acc, cur, index) => {
-      const { code, name } = cur;
-      acc = {
-        ...acc,
-        [code]: name,
-      };
-      return acc;
-    }, result);
-  };
 }

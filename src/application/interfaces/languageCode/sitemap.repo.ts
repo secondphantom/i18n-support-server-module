@@ -4,9 +4,7 @@ import {
 } from "@src/application/service/languageCode/language.code.service";
 
 export abstract class LanguageCodeSitemapRepo {
-  getSiteMap = (
+  abstract getSiteMap: (
     dao: LanguageCodeSiteMapInputs
-  ): Promise<LanguageCodeSiteMapReturn> | LanguageCodeSiteMapReturn => ({
-    siteMap: "str",
-  });
+  ) => LanguageCodeSiteMapReturn;
 }

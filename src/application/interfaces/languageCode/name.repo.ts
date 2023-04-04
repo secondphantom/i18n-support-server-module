@@ -6,19 +6,9 @@ import {
 } from "@src/application/service/languageCode/language.code.service";
 
 export abstract class LanguageCodeNameRepo {
-  getName = (
-    dao: LanguageCodeWithOptions
-  ): Promise<LanguageCodeWithName> | LanguageCodeWithName => ({
-    code: "str",
-    name: "str",
-  });
+  abstract getName: (dao: LanguageCodeWithOptions) => LanguageCodeWithName;
 
-  getMultiName = (
+  abstract getMultiName: (
     dao: MultiLanguageCodeWithOptions
-  ): Promise<LanguageCodeWithName[]> | LanguageCodeWithName[] => [
-    {
-      code: "temp",
-      name: "temp",
-    },
-  ];
+  ) => LanguageCodeWithName[];
 }
