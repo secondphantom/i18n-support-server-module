@@ -71,9 +71,7 @@ export class LanguageCodeService {
     return this.languageCodeNameRepo.getMultiName(dto);
   };
 
-  getMultiCodeToKeyNameValue = async (
-    dto: MultiLanguageCodeWithOptions
-  ): Promise<LanguageCodeKeyWithName> => {
+  getMultiCodeToKeyNameValue = async (dto: MultiLanguageCodeWithOptions) => {
     const { codeList, options } = dto;
     const multipleLanguageNameList = await this.getMultiName({
       codeList,
