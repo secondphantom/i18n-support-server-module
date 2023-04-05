@@ -17,8 +17,9 @@ import { LocalLanguageCodeNameRepo } from "../db/languageCode/name.repo";
 import { LocalLanguageCodeSiteMapRepo } from "../db/languageCode/sitemap.repo";
 import { TranslateProxyInterface } from "@src/controller/translate/translate.interface";
 import { ResponseDto } from "@src/controller/dto/response.dto";
+import { ExpressServer } from "../server/express/server";
 
-interface ServerOptions {
+export interface ServerOptions {
   translateRepo?: {
     type: TranslateRepoType;
     options?: TranslateRepoOptions;
@@ -63,35 +64,13 @@ export const i18nSupportServerFactory = async (
   return server;
 };
 
-interface ControllerOptions {
+export interface ControllerOptions {
   translateRepo?: {
     type: TranslateRepoType;
     options?: TranslateRepoOptions;
     launchOptions?: LaunchOptions;
   };
 }
-
-const responseResolver = <T>(controller: {
-  [key in string]: any;
-}) => {
-  const newController: { [key in string]: (...args: any[]) => any } = {};
-  Object.entries(controller).forEach(([key, value]) => {
-    if (typeof value !== "function") {
-      newController[key] = value;
-      return;
-    }
-    newController[key] = async (...args: any[]) => {
-      return value(...args).then((response: ResponseDto) => {
-        if (response.status !== 200) {
-          throw new Error(response.payload.data.message);
-        }
-        return response.payload.data;
-      });
-    };
-    return;
-  });
-  return newController as T;
-};
 
 export const i18nSupportControllerFactory = async <
   T extends LanguageCodeProxyValidator | TranslateProxyValidator
@@ -137,4 +116,26 @@ export const i18nSupportControllerFactory = async <
     default:
       throw new Error("Need Controller Type Input");
   }
+};
+
+const responseResolver = <T>(controller: {
+  [key in string]: any;
+}) => {
+  const newController: { [key in string]: (...args: any[]) => any } = {};
+  Object.entries(controller).forEach(([key, value]) => {
+    if (typeof value !== "function") {
+      newController[key] = value;
+      return;
+    }
+    newController[key] = async (...args: any[]) => {
+      return value(...args).then((response: ResponseDto) => {
+        if (response.status !== 200) {
+          throw new Error(response.payload.data.message);
+        }
+        return response.payload.data;
+      });
+    };
+    return;
+  });
+  return newController as T;
 };
