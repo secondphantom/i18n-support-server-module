@@ -1,6 +1,6 @@
 import { ExpressServer } from "./express/server";
 
-type ServerType = "express";
+export type ServerType = "express";
 
 export class ServerFactory {
   static getInstance = (type: ServerType) => {

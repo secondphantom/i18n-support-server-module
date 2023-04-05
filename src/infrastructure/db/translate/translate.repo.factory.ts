@@ -1,9 +1,9 @@
 import { GoogleTranslateRepo } from "./google_browser/translate.repo";
 
-type RepoType = "google_browser";
+export type TranslateRepoType = "google_browser";
 
 export class TranslateRepoFactory {
-  static getInstance = (type: RepoType) => {
+  static getInstance = (type: TranslateRepoType) => {
     switch (type) {
       case "google_browser":
         return GoogleTranslateRepo.getInstance;

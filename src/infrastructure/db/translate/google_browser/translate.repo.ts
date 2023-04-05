@@ -15,7 +15,7 @@ import {
   Page,
 } from "playwright";
 
-interface Options {
+export interface TranslateRepoOptions {
   concurrency: number;
   lockDelayMs?: number;
 }
@@ -35,7 +35,7 @@ export class GoogleTranslateRepo extends TranslateRepo {
   private URL = "https://translate.google.co.kr/?hl=en";
 
   constructor(
-    private options?: Options,
+    private options?: TranslateRepoOptions,
     private launchOptions?: LaunchOptions
   ) {
     super();
@@ -52,7 +52,7 @@ export class GoogleTranslateRepo extends TranslateRepo {
   }
 
   static getInstance = async (
-    options?: Options,
+    options?: TranslateRepoOptions,
     launchOptions?: LaunchOptions
   ) => {
     if (this.instance) return this.instance;
