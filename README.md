@@ -1,5 +1,7 @@
 # i18n support server and module
-i18n Related Modules and Server
+i18n Related Support Modules and Server
+
+[API Docs](https://secondphantom.github.io/i18n-support-server-module/)
 
 - translate multiple sentence
 - get language name by language code
