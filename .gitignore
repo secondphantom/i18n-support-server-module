@@ -5,9 +5,9 @@ node_modules/*
 dist/**/*
 dbSchema/*
 exclude/*
-*.json
 log/*
 *.log
+.vscoe/**/*
 json/*
 src/temp/*
 static/**/*
