@@ -8,7 +8,6 @@ exclude/*
 log/*
 *.log
 .vscoe/**/*
-json/*
 src/temp/*
 static/**/*
 *.png
