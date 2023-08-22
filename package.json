@@ -10,7 +10,7 @@
     "dev": "cross-env NODE_ENV=dev node dist/index.server.js",
     "start": "cross-env NODE_ENV=prd node dist/index.server.js",
     "docs": "npx typedoc",
-    "temp": "node dist/temp/example.js"
+    "temp": "node dist/temp/sitemap.js"
   },
   "keywords": [],
   "author": "Second Phantom <second2phantom@gmail.com>",

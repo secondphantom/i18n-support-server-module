@@ -42,8 +42,8 @@ export class LanguageCodeValidator implements LanguageCodeValidatorInterface {
   };
 
   private languageCodeSiteMapOptions = z.object({
-    trailingSlash: z.boolean(),
-    lastMod: z.string(),
+    trailingSlash: z.boolean().optional(),
+    lastMod: z.string().optional(),
   });
 
   private languageCodeSiteMapInputsSchema = z.object({

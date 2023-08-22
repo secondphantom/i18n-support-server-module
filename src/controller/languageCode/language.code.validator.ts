@@ -80,8 +80,9 @@ export class LanguageCodeProxyValidator implements LanguageCodeProxyInterface {
 
   getSiteMap = async (dto: LanguageCodeSiteMapInputs) => {
     try {
-      await this.languageCodeValidator.getSiteMap(dto);
+      this.languageCodeValidator.getSiteMap(dto);
     } catch (error) {
+      console.log(error);
       return new ResponseDto({
         status: 400,
         payload: {
