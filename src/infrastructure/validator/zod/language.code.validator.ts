@@ -48,7 +48,15 @@ export class LanguageCodeValidator implements LanguageCodeValidatorInterface {
 
   private languageCodeSiteMapInputsSchema = z.object({
     rootUrl: z.string().min(1).startsWith("http"),
-    pages: z.array(z.string().min(1).startsWith("/")),
+    pages: z.array(
+      z.union([
+        z.string().min(1).startsWith("/"),
+        z.object({
+          page: z.string().min(1).startsWith("/"),
+          supportedLocales: z.array(z.string().min(1).max(3)),
+        }),
+      ])
+    ),
     defaultLocale: z.string().min(2),
     supportedLocales: z.array(z.string().min(1).max(3)),
     options: z.optional(this.languageCodeSiteMapOptions),

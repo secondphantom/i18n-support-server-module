@@ -40,12 +40,23 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
     };
 
     return pages
-      .map((page) => {
+      .map((curPage) => {
+        if (typeof curPage === "string") {
+          const urlList = this.getUrlList({
+            rootUrl,
+            page: curPage,
+            defaultLocale,
+            supportedLocales,
+            options: newOptions,
+          });
+          return urlList;
+        }
+        const { page, supportedLocales: curSupportedLocales } = curPage;
         const urlList = this.getUrlList({
           rootUrl,
           page,
           defaultLocale,
-          supportedLocales,
+          supportedLocales: curSupportedLocales,
           options: newOptions,
         });
         return urlList;

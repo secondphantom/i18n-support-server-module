@@ -24,7 +24,7 @@ export type LanguageCodeKeyWithName = { [key in string]: string };
 
 export interface LanguageCodeSiteMapInputs {
   rootUrl: string;
-  pages: string[];
+  pages: (string | { page: string; supportedLocales: string[] })[];
   defaultLocale: string;
   supportedLocales: string[];
   options?: LanguageCodeSiteMapOptions;
