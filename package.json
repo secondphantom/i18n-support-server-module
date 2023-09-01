@@ -1,6 +1,6 @@
 {
   "name": "i18n-support-server-module",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "dev": "cross-env NODE_ENV=dev node dist/index.server.js",
     "start": "cross-env NODE_ENV=prd node dist/index.server.js",
     "docs": "npx typedoc",
-    "temp": "node dist/temp/sitemap.js"
+    "temp": "node dist/temp/aidreaminterpreter/get.json2.js"
   },
   "keywords": [],
   "author": "Second Phantom <second2phantom@gmail.com>",

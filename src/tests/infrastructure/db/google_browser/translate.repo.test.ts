@@ -6,7 +6,7 @@ describe("Google Browser Crawler Repo Test", () => {
     translateRepo = await GoogleTranslateRepo.getInstance(
       { concurrency: 1 },
       {
-        headless: true,
+        headless: false,
       }
     );
   });
@@ -31,6 +31,7 @@ describe("Google Browser Crawler Repo Test", () => {
         sentence: expect.any(String),
       })
     );
+    expect(result.sentence).not.toEqual("Error");
     expect(params.to).toEqual(locale);
   }, 10000);
 });

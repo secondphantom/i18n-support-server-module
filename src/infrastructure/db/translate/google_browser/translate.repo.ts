@@ -102,7 +102,7 @@ export class GoogleTranslateRepo extends TranslateRepo {
     try {
       const page = await this.getPage();
       await this.setUrl(dao, page);
-      const result = await this.getResult(page);
+      const result = await this.getResult(dao, page);
       page.isLocked = false;
       return {
         locale: dao.to,
@@ -125,9 +125,9 @@ export class GoogleTranslateRepo extends TranslateRepo {
     await pageWithLock.page?.goto(url, { waitUntil: "networkidle" });
   };
 
-  private getResult = async (pageWithLock: PageWithLock) => {
+  private getResult = async ({ to }: Sentence, pageWithLock: PageWithLock) => {
     const result = await (
-      await (await pageWithLock.page?.$("div[aria-live='polite']"))?.$("span")
+      await pageWithLock.page?.$(`span[lang="${to}"]`)
     )?.innerText();
     if (result === undefined) {
       throw new Error("Fail to translate");
