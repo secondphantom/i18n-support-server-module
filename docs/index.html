@@ -16,7 +16,8 @@
 <a href="#i18n-support-server-and-module" id="i18n-support-server-and-module" style="color: inherit; text-decoration: none;">
   <h1>i18n support server and module</h1>
 </a>
-<p>i18n Related Modules and Server</p>
+<p>i18n Related Support Modules and Server</p>
+<p><a href="https://secondphantom.github.io/i18n-support-server-module/">API Docs</a></p>
 <ul>
 <li>translate multiple sentence</li>
 <li>get language name by language code</li>
@@ -32,15 +33,9 @@
 <li><a href="#installation">Installation</a></li>
 <li><a href="#module">Module</a><ul>
 <li><a href="#example">Example</a></li>
-<li><a href="#factory">Factory</a><ul>
-<li><a href="#parameters">Parameters</a><ul>
-<li><a href="#type"><code>type</code></a></li>
-<li><a href="#options"><code>options</code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#controller">Controller</a><ul>
+<li><a href="#translator">Translator</a><ul>
+<li><a href="#class">Class</a></li>
+<li><a href="#constructor-parameters">Constructor Parameters</a></li>
 <li><a href="#translate">Translate</a><ul>
 <li><a href="#methods">Methods</a><ul>
 <li><a href="#translatesentence"><code>translateSentence</code></a><ul>
@@ -67,6 +62,10 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#languagecode">LanguageCode</a><ul>
+<li><a href="#class-1">Class</a></li>
 <li><a href="#language-code">Language Code</a><ul>
 <li><a href="#methods-1">Methods</a><ul>
 <li><a href="#getname"><code>getName</code></a><ul>
@@ -99,7 +98,7 @@
 </li>
 <li><a href="#server">Server</a><ul>
 <li><a href="#example-1">Example</a></li>
-<li><a href="#factory-1">Factory</a></li>
+<li><a href="#factory">Factory</a></li>
 <li><a href="#request">Request</a><ul>
 <li><a href="#translate-1">Translate</a><ul>
 <li><a href="#urls">URLs</a><ul>
@@ -141,34 +140,24 @@
 <a href="#example" id="example" style="color: inherit; text-decoration: none;">
   <h2>Example</h2>
 </a>
-<pre><code class="language-ts"><span class="hl-1">(</span><span class="hl-4">async</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">translateController</span><span class="hl-1"> =</span><br/><span class="hl-1">    </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-7">i18nSupportControllerFactory</span><span class="hl-1">&lt;</span><span class="hl-8">TranslateProxyValidator</span><span class="hl-1">&gt;(</span><span class="hl-9">&quot;translate&quot;</span><span class="hl-1">);</span><br/><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">input</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">json:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">bicycle:</span><span class="hl-1"> </span><span class="hl-9">&quot;자전거&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">car:</span><span class="hl-1"> </span><span class="hl-9">&quot;자동차&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">bus:</span><span class="hl-1"> </span><span class="hl-9">&quot;버스&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">from:</span><span class="hl-1"> </span><span class="hl-9">&quot;ko&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">to:</span><span class="hl-1"> [</span><span class="hl-9">&quot;ja&quot;</span><span class="hl-1">, </span><span class="hl-9">&quot;en&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">  };</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">translateController</span><span class="hl-1">.</span><span class="hl-7">translateJsonValue</span><span class="hl-1">(</span><span class="hl-0">input</span><span class="hl-1">);</span><br/><br/><span class="hl-1">  </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-0">result</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">/*</span><br/><span class="hl-3">    {</span><br/><span class="hl-3">        ja: { bicycle: &#39;自転車&#39;, car: &#39;自動車&#39;, bus: &#39;バス&#39; },</span><br/><span class="hl-3">        en: { bicycle: &#39;bicycle&#39;, car: &#39;automobile&#39;, bus: &#39;bus&#39; },</span><br/><span class="hl-3">        ko: { bicycle: &#39;자전거&#39;, car: &#39;자동차&#39;, bus: &#39;버스&#39; }</span><br/><span class="hl-3">    }</span><br/><span class="hl-3">    */</span><br/><span class="hl-1">})();</span>
+<pre><code class="language-ts"><span class="hl-1">(</span><span class="hl-4">async</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">translateController</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Translator</span><span class="hl-1">();</span><br/><span class="hl-1">  </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-0">translateController</span><span class="hl-1">.</span><span class="hl-6">init</span><span class="hl-1">();</span><br/><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">input</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">json:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">bicycle:</span><span class="hl-1"> </span><span class="hl-8">&quot;자전거&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">car:</span><span class="hl-1"> </span><span class="hl-8">&quot;자동차&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">bus:</span><span class="hl-1"> </span><span class="hl-8">&quot;버스&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">from:</span><span class="hl-1"> </span><span class="hl-8">&quot;ko&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">to:</span><span class="hl-1"> [</span><span class="hl-8">&quot;ja&quot;</span><span class="hl-1">, </span><span class="hl-8">&quot;en&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">  };</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-0">translateController</span><span class="hl-1">.</span><span class="hl-6">translateJsonValue</span><span class="hl-1">(</span><span class="hl-0">input</span><span class="hl-1">);</span><br/><br/><span class="hl-1">  </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-0">result</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">/*</span><br/><span class="hl-3">    {</span><br/><span class="hl-3">        ja: { bicycle: &#39;自転車&#39;, car: &#39;自動車&#39;, bus: &#39;バス&#39; },</span><br/><span class="hl-3">        en: { bicycle: &#39;bicycle&#39;, car: &#39;automobile&#39;, bus: &#39;bus&#39; },</span><br/><span class="hl-3">        ko: { bicycle: &#39;자전거&#39;, car: &#39;자동차&#39;, bus: &#39;버스&#39; }</span><br/><span class="hl-3">    }</span><br/><span class="hl-3">    */</span><br/><span class="hl-1">})();</span>
 </code></pre>
 
-<a href="#factory" id="factory" style="color: inherit; text-decoration: none;">
-  <h2>Factory</h2>
+<a href="#translator" id="translator" style="color: inherit; text-decoration: none;">
+  <h2>Translator</h2>
 </a>
-<pre><code class="language-ts"><span class="hl-0">i18nSupportControllerFactory</span><span class="hl-1">&lt;</span><span class="hl-8">T</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeProxyValidator</span><span class="hl-1"> | </span><span class="hl-8">TranslateProxyValidator</span><span class="hl-1">&gt;(</span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-8">T</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeProxyValidator</span><span class="hl-1"> ? </span><span class="hl-9">&quot;language-code&quot;</span><span class="hl-1"> : </span><span class="hl-9">&quot;translate&quot;</span><span class="hl-1">, </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">ControllerOptions</span><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">T</span><span class="hl-1">&gt;</span>
+
+<a href="#class" id="class" style="color: inherit; text-decoration: none;">
+  <h3>Class</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">controller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Translator</span><span class="hl-1">(</span><span class="hl-0">options</span><span class="hl-1">?)</span><br/><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-0">controller</span><span class="hl-1">.</span><span class="hl-6">init</span><span class="hl-1">()</span>
 </code></pre>
 
-<a href="#parameters" id="parameters" style="color: inherit; text-decoration: none;">
-  <h3>Parameters</h3>
+<a href="#constructor-parameters" id="constructor-parameters" style="color: inherit; text-decoration: none;">
+  <h3>Constructor Parameters</h3>
 </a>
-
-<a href="#type" id="type" style="color: inherit; text-decoration: none;">
-  <h4><code>type</code></h4>
-</a>
-<p><em>&quot;language-code&quot;</em> or <em>&quot;translate&quot;</em></p>
-
-<a href="#options" id="options" style="color: inherit; text-decoration: none;">
-  <h4><code>options</code></h4>
-</a>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">ControllerOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">translateRepo</span><span class="hl-1">?: {</span><br/><span class="hl-1">    </span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-8">TranslateRepoType</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">TranslateRepoOptions</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">launchOptions</span><span class="hl-1">?: </span><span class="hl-8">LaunchOptions</span><span class="hl-1">;</span><br/><span class="hl-1">  };</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-8">TranslateRepoType</span><span class="hl-1"> = </span><span class="hl-9">&quot;google_browser&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateRepoOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">concurrency</span><span class="hl-1">: </span><span class="hl-8">number</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">lockDelayMs</span><span class="hl-1">?: </span><span class="hl-8">number</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslatorOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">translateRepo</span><span class="hl-1">?: {</span><br/><span class="hl-1">    </span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-9">TranslateRepoType</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-9">TranslateRepoOptions</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">launchOptions</span><span class="hl-1">?: </span><span class="hl-9">LaunchOptions</span><span class="hl-1">;</span><br/><span class="hl-1">  };</span><br/><span class="hl-1">}</span><br/><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-9">TranslateRepoType</span><span class="hl-1"> = </span><span class="hl-8">&quot;google_browser&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateRepoOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">concurrency</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">lockDelayMs</span><span class="hl-1">?: </span><span class="hl-9">number</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
-
-<a href="#controller" id="controller" style="color: inherit; text-decoration: none;">
-  <h2>Controller</h2>
-</a>
-<p>i18nSupportControllerFactory return value</p>
 
 <a href="#translate" id="translate" style="color: inherit; text-decoration: none;">
   <h3>Translate</h3>
@@ -187,14 +176,14 @@
   <h6>inputs</h6>
 </a>
 <p><em>Sentence</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">Sentence</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">Sentence</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return" id="return" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p><em>TranslateReturn</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateReturn</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateReturn</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#translatemultisentence" id="translatemultisentence" style="color: inherit; text-decoration: none;">
@@ -205,14 +194,14 @@
   <h6>inputs</h6>
 </a>
 <p>Array of <em>SentenceWithKey</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">SentenceWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">SentenceWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-1" id="return-1" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p>Array of <em>TranslateReturnWithKey</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateReturnWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">:</span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateReturnWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">:</span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#translatemultilanguage" id="translatemultilanguage" style="color: inherit; text-decoration: none;">
@@ -223,14 +212,14 @@
   <h6>inputs</h6>
 </a>
 <p><em>TranslateMultiLanguageDto</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateMultiLanguageDto</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">sentenceAry</span><span class="hl-1">: { </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">; </span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1"> }[];</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateMultiLanguageDto</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">sentenceAry</span><span class="hl-1">: { </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">; </span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1"> }[];</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">[];</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-2" id="return-2" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p>Array of <em>Array of TranslateReturnWithKey</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateReturnWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">:</span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateReturnWithKey</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">locale</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">sentence</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-0">key</span><span class="hl-1">:</span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#translatejsonvalue" id="translatejsonvalue" style="color: inherit; text-decoration: none;">
@@ -241,14 +230,24 @@
   <h6>inputs</h6>
 </a>
 <p><em>TranslateJsonValueDto</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">TranslateJsonValueDto</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">json</span><span class="hl-1">: { [</span><span class="hl-8">key</span><span class="hl-1"> </span><span class="hl-4">in</span><span class="hl-1"> </span><span class="hl-8">string</span><span class="hl-1">]: </span><span class="hl-8">string</span><span class="hl-1"> };</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">TranslateJsonValueDto</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">json</span><span class="hl-1">: { [</span><span class="hl-9">key</span><span class="hl-1"> </span><span class="hl-4">in</span><span class="hl-1"> </span><span class="hl-9">string</span><span class="hl-1">]: </span><span class="hl-9">string</span><span class="hl-1"> };</span><br/><span class="hl-1">  </span><span class="hl-0">from</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">to</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">[];</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-3" id="return-3" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p><em>Return</em></p>
-<pre><code class="language-ts"><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-8">Return</span><span class="hl-1"> = {</span><br/><span class="hl-1">    [</span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">]: {</span><br/><span class="hl-1">        [</span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">]: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">    };</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-9">Return</span><span class="hl-1"> = {</span><br/><span class="hl-1">    [</span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">]: {</span><br/><span class="hl-1">        [</span><span class="hl-0">key</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">]: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">    };</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#languagecode" id="languagecode" style="color: inherit; text-decoration: none;">
+  <h2>LanguageCode</h2>
+</a>
+
+<a href="#class-1" id="class-1" style="color: inherit; text-decoration: none;">
+  <h3>Class</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">controller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">LanguageCode</span><span class="hl-1">();</span>
 </code></pre>
 
 <a href="#language-code" id="language-code" style="color: inherit; text-decoration: none;">
@@ -268,14 +267,14 @@
   <h6>inputs</h6>
 </a>
 <p><em>LanguageCodeWithOptions</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">Options</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">short</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeWithOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">Options</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">Options</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">short</span><span class="hl-1">: </span><span class="hl-9">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeWithOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-9">Options</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-4" id="return-4" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p><em>LanguageCodeWithName</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeWithName</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">name</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeWithName</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">name</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#getmultiname" id="getmultiname" style="color: inherit; text-decoration: none;">
@@ -286,14 +285,14 @@
   <h6>inputs</h6>
 </a>
 <p><em>MultiLanguageCodeWithOptions</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">Options</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">short</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">MultiLanguageCodeWithOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">codeList</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">Options</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">Options</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">short</span><span class="hl-1">: </span><span class="hl-9">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">MultiLanguageCodeWithOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">codeList</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-9">Options</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-5" id="return-5" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p>Array of <em>LanguageCodeWithName</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeWithName</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">name</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeWithName</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">code</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">name</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#getmulticodetokeynamevalue" id="getmulticodetokeynamevalue" style="color: inherit; text-decoration: none;">
@@ -309,7 +308,7 @@
   <h6>return</h6>
 </a>
 <p><em>Return</em></p>
-<pre><code class="language-ts"><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-8">Return</span><span class="hl-1"> {</span><br/><span class="hl-1">    [x: string]: string;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-9">Return</span><span class="hl-1"> {</span><br/><span class="hl-1">    [x: string]: string;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#getsitemap" id="getsitemap" style="color: inherit; text-decoration: none;">
@@ -320,14 +319,14 @@
   <h6>inputs</h6>
 </a>
 <p><em>LanguageCodeSiteMapInputs</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeSiteMapInputs</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">rootUrl</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">pages</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">defaultLocale</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">supportedLocales</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">LanguageCodeSiteMapOptions</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeSiteMapOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">trailingSlash</span><span class="hl-1">?: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">lastMod</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeSiteMapInputs</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">rootUrl</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">pages</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">defaultLocale</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">supportedLocales</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-9">LanguageCodeSiteMapOptions</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeSiteMapOptions</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">trailingSlash</span><span class="hl-1">?: </span><span class="hl-9">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">lastMod</span><span class="hl-1">?: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#return-7" id="return-7" style="color: inherit; text-decoration: none;">
   <h6>return</h6>
 </a>
 <p><em>LanguageCodeSiteMapReturn</em></p>
-<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-8">LanguageCodeSiteMapReturn</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">siteMap</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">interface</span><span class="hl-1"> </span><span class="hl-9">LanguageCodeSiteMapReturn</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-0">siteMap</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <a href="#server" id="server" style="color: inherit; text-decoration: none;">
@@ -338,13 +337,13 @@
 <a href="#example-1" id="example-1" style="color: inherit; text-decoration: none;">
   <h2>Example</h2>
 </a>
-<pre><code class="language-ts"><span class="hl-1">(</span><span class="hl-4">async</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">server</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-7">i18nSupportServerFactory</span><span class="hl-1">(</span><span class="hl-9">&quot;express&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">url</span><span class="hl-1"> = </span><span class="hl-9">&quot;http://localhost:3000/translate/sentence/multi/language/json&quot;</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">body</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">json:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">bicycle:</span><span class="hl-1"> </span><span class="hl-9">&quot;자전거&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">car:</span><span class="hl-1"> </span><span class="hl-9">&quot;자동차&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">bus:</span><span class="hl-1"> </span><span class="hl-9">&quot;버스&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">from:</span><span class="hl-1"> </span><span class="hl-9">&quot;ko&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">to:</span><span class="hl-1"> [</span><span class="hl-9">&quot;ja&quot;</span><span class="hl-1">, </span><span class="hl-9">&quot;en&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">  };</span><br/><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-7">fetch</span><span class="hl-1">(</span><span class="hl-0">url</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-0">body:</span><span class="hl-1"> </span><span class="hl-5">JSON</span><span class="hl-1">.</span><span class="hl-7">stringify</span><span class="hl-1">(</span><span class="hl-0">body</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">method:</span><span class="hl-1"> </span><span class="hl-9">&quot;POST&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">headers:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-9">&quot;Content-Type&quot;</span><span class="hl-0">:</span><span class="hl-1"> </span><span class="hl-9">&quot;application/json&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  }).</span><span class="hl-7">then</span><span class="hl-1">((</span><span class="hl-0">response</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-6">return</span><span class="hl-1"> </span><span class="hl-0">response</span><span class="hl-1">.</span><span class="hl-7">json</span><span class="hl-1">();</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-0">result</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">/*</span><br/><span class="hl-3">    {</span><br/><span class="hl-3">        success: true,</span><br/><span class="hl-3">        data: {</span><br/><span class="hl-3">            ja: { bicycle: &#39;自転車&#39;, car: &#39;自動車&#39;, bus: &#39;バス&#39; },</span><br/><span class="hl-3">            en: { bicycle: &#39;bicycle&#39;, car: &#39;automobile&#39;, bus: &#39;bus&#39; },</span><br/><span class="hl-3">            ko: { bicycle: &#39;자전거&#39;, car: &#39;자동차&#39;, bus: &#39;버스&#39; }</span><br/><span class="hl-3">        }</span><br/><span class="hl-3">    }</span><br/><span class="hl-3">    */</span><br/><span class="hl-1">  </span><span class="hl-0">server</span><span class="hl-1">.</span><span class="hl-7">close</span><span class="hl-1">();</span><br/><span class="hl-1">})();</span>
+<pre><code class="language-ts"><span class="hl-1">(</span><span class="hl-4">async</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">server</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-6">i18nSupportServerFactory</span><span class="hl-1">(</span><span class="hl-8">&quot;express&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">url</span><span class="hl-1"> = </span><span class="hl-8">&quot;http://localhost:3000/translate/sentence/multi/language/json&quot;</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">body</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">json:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">bicycle:</span><span class="hl-1"> </span><span class="hl-8">&quot;자전거&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">car:</span><span class="hl-1"> </span><span class="hl-8">&quot;자동차&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-0">bus:</span><span class="hl-1"> </span><span class="hl-8">&quot;버스&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">from:</span><span class="hl-1"> </span><span class="hl-8">&quot;ko&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">to:</span><span class="hl-1"> [</span><span class="hl-8">&quot;ja&quot;</span><span class="hl-1">, </span><span class="hl-8">&quot;en&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">  };</span><br/><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-6">fetch</span><span class="hl-1">(</span><span class="hl-0">url</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-0">body:</span><span class="hl-1"> </span><span class="hl-5">JSON</span><span class="hl-1">.</span><span class="hl-6">stringify</span><span class="hl-1">(</span><span class="hl-0">body</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">method:</span><span class="hl-1"> </span><span class="hl-8">&quot;POST&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">headers:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-8">&quot;Content-Type&quot;</span><span class="hl-0">:</span><span class="hl-1"> </span><span class="hl-8">&quot;application/json&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  }).</span><span class="hl-6">then</span><span class="hl-1">((</span><span class="hl-0">response</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-7">return</span><span class="hl-1"> </span><span class="hl-0">response</span><span class="hl-1">.</span><span class="hl-6">json</span><span class="hl-1">();</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-0">result</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">/*</span><br/><span class="hl-3">    {</span><br/><span class="hl-3">        success: true,</span><br/><span class="hl-3">        data: {</span><br/><span class="hl-3">            ja: { bicycle: &#39;自転車&#39;, car: &#39;自動車&#39;, bus: &#39;バス&#39; },</span><br/><span class="hl-3">            en: { bicycle: &#39;bicycle&#39;, car: &#39;automobile&#39;, bus: &#39;bus&#39; },</span><br/><span class="hl-3">            ko: { bicycle: &#39;자전거&#39;, car: &#39;자동차&#39;, bus: &#39;버스&#39; }</span><br/><span class="hl-3">        }</span><br/><span class="hl-3">    }</span><br/><span class="hl-3">    */</span><br/><span class="hl-1">  </span><span class="hl-0">server</span><span class="hl-1">.</span><span class="hl-6">close</span><span class="hl-1">();</span><br/><span class="hl-1">})();</span>
 </code></pre>
 
-<a href="#factory-1" id="factory-1" style="color: inherit; text-decoration: none;">
+<a href="#factory" id="factory" style="color: inherit; text-decoration: none;">
   <h2>Factory</h2>
 </a>
-<pre><code class="language-ts"><span class="hl-2">i18nSupportServerFactory</span><span class="hl-1">: (</span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-8">ServerType</span><span class="hl-1">, </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-8">ServerOptions</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-0">ExpressServer</span><span class="hl-1">&gt;</span>
+<pre><code class="language-ts"><span class="hl-2">i18nSupportServerFactory</span><span class="hl-1">: (</span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-9">ServerType</span><span class="hl-1">, </span><span class="hl-0">options</span><span class="hl-1">?: </span><span class="hl-9">ServerOptions</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-9">Promise</span><span class="hl-1">&lt;</span><span class="hl-0">ExpressServer</span><span class="hl-1">&gt;</span>
 </code></pre>
 
 <a href="#request" id="request" style="color: inherit; text-decoration: none;">
