@@ -99,8 +99,8 @@ export class GoogleTranslateRepo extends TranslateRepo {
   };
 
   translate = async (dao: Sentence): Promise<TranslateReturn> => {
+    const page = await this.getPage();
     try {
-      const page = await this.getPage();
       await this.setUrl(dao, page);
       const result = await this.getResult(dao, page);
       page.isLocked = false;
@@ -109,6 +109,7 @@ export class GoogleTranslateRepo extends TranslateRepo {
         sentence: result,
       };
     } catch (error) {
+      page.isLocked = false;
       return {
         locale: dao.to,
         sentence: "Error",
