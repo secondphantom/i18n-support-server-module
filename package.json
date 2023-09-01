@@ -1,6 +1,6 @@
 {
   "name": "i18n-support-server-module",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

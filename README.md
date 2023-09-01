@@ -13,11 +13,9 @@ i18n Related Support Modules and Server
 - [Installation](#installation)
 - [Module](#module)
 	- [Example](#example)
-	- [Factory](#factory)
-		- [Parameters](#parameters)
-			- [`type`](#type)
-			- [`options`](#options)
-	- [Controller](#controller)
+	- [Translator](#translator)
+		- [Class](#class)
+		- [Constructor Parameters](#constructor-parameters)
 		- [Translate](#translate)
 			- [Methods](#methods)
 				- [`translateSentence`](#translatesentence)
@@ -32,6 +30,8 @@ i18n Related Support Modules and Server
 				- [`translateJsonValue`](#translatejsonvalue)
 					- [inputs](#inputs-3)
 					- [return](#return-3)
+	- [LanguageCode](#languagecode)
+		- [Class](#class-1)
 		- [Language Code](#language-code)
 			- [Methods](#methods-1)
 				- [`getName`](#getname)
@@ -48,7 +48,7 @@ i18n Related Support Modules and Server
 					- [return](#return-7)
 - [Server](#server)
 	- [Example](#example-1)
-	- [Factory](#factory-1)
+	- [Factory](#factory)
 	- [Request](#request)
 		- [Translate](#translate-1)
 			- [URLs](#urls)
@@ -72,8 +72,8 @@ type: `class`
 ## Example
 ```ts
 (async () => {
-  const translateController =
-    await i18nSupportControllerFactory<TranslateProxyValidator>("translate");
+  const translateController = new Translator();
+  await translateController.init();
 
   const input = {
     json: {
@@ -96,23 +96,21 @@ type: `class`
 	*/
 })();
 ```
-## Factory
+## Translator
+### Class
 ```ts
-i18nSupportControllerFactory<T extends LanguageCodeProxyValidator | TranslateProxyValidator>(type: T extends LanguageCodeProxyValidator ? "language-code" : "translate", options?: ControllerOptions): Promise<T>
+const controller = new Translator(options?)
+await controller.init()
 ```
-### Parameters
-#### `type`
-*"language-code"* or *"translate"*
-#### `options`
+### Constructor Parameters
 ```ts
-interface ControllerOptions {
+interface TranslatorOptions {
   translateRepo?: {
     type: TranslateRepoType;
     options?: TranslateRepoOptions;
     launchOptions?: LaunchOptions;
   };
 }
-
 type TranslateRepoType = "google_browser";
 
 interface TranslateRepoOptions {
@@ -120,8 +118,6 @@ interface TranslateRepoOptions {
   lockDelayMs?: number;
 }
 ```
-## Controller
-i18nSupportControllerFactory return value
 ### Translate
 When a sentence is input, it responds with the translated content in multiple languages
 #### Methods
@@ -200,6 +196,11 @@ type Return = {
         [key: string]: string;
     };
 }
+```
+## LanguageCode
+### Class
+```ts
+const controller = new LanguageCode();
 ```
 ### Language Code
 If a language code is given, it responds with the language or sitemap.xml according to the code.

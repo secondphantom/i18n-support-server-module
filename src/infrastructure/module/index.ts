@@ -8,11 +8,25 @@ import { ServerFactory, ServerType } from "../server/server.factory";
 import { TranslateProxyValidator } from "@src/controller/translate/translate.validator";
 import { TranslateValidator } from "../validator/zod/translate.validator";
 import { TranslateController } from "@src/controller/translate/translate.controller";
-import { TranslateService } from "@src/application/service/translate/translate.service";
+import {
+  Sentence,
+  SentenceWithKey,
+  TranslateJsonValueDto,
+  TranslateMultiLanguageDto,
+  TranslateReturn,
+  TranslateService,
+} from "@src/application/service/translate/translate.service";
 import { LanguageCodeProxyValidator } from "@src/controller/languageCode/language.code.validator";
 import { LanguageCodeValidator } from "../validator/zod/language.code.validator";
 import { LanguageCodeController } from "@src/controller/languageCode/language.code.controller";
-import { LanguageCodeService } from "@src/application/service/languageCode/language.code.service";
+import {
+  LanguageCodeService,
+  LanguageCodeSiteMapInputs,
+  LanguageCodeSiteMapReturn,
+  LanguageCodeWithName,
+  LanguageCodeWithOptions,
+  MultiLanguageCodeWithOptions,
+} from "@src/application/service/languageCode/language.code.service";
 import { LocalLanguageCodeNameRepo } from "../db/languageCode/name.repo";
 import { LocalLanguageCodeSiteMapRepo } from "../db/languageCode/sitemap.repo";
 import { TranslateProxyInterface } from "@src/controller/translate/translate.interface";
@@ -64,7 +78,7 @@ export const i18nSupportServerFactory = async (
   return server;
 };
 
-export interface ControllerOptions {
+export interface TranslatorOptions {
   translateRepo?: {
     type: TranslateRepoType;
     options?: TranslateRepoOptions;
@@ -72,70 +86,106 @@ export interface ControllerOptions {
   };
 }
 
-export const i18nSupportControllerFactory = async <
-  T extends LanguageCodeProxyValidator | TranslateProxyValidator
->(
-  type: T extends LanguageCodeProxyValidator ? "language-code" : "translate",
-  options?: ControllerOptions
-): Promise<T> => {
-  options = {
-    translateRepo: {
-      type: "google_browser",
-      ...options?.translateRepo,
-    },
+export class Translator {
+  private options: TranslatorOptions;
+  private controller: TranslateProxyValidator | undefined;
+
+  constructor(options?: TranslatorOptions) {
+    this.options = {
+      translateRepo: {
+        type: "google_browser",
+        ...options?.translateRepo,
+      },
+    };
+  }
+
+  init = async () => {
+    const translateRepo = await TranslateRepoFactory.getInstance(
+      this.options.translateRepo!.type as any
+    )(
+      this.options.translateRepo?.options,
+      this.options.translateRepo?.launchOptions
+    );
+    this.controller = new TranslateProxyValidator(
+      new TranslateValidator(),
+      new TranslateController(new TranslateService(translateRepo))
+    );
   };
 
-  switch (type) {
-    case "translate":
-      const translateRepo = await TranslateRepoFactory.getInstance(
-        options.translateRepo!.type
-      )(options.translateRepo?.options, options.translateRepo?.launchOptions);
+  translateSentence = async (dto: Sentence) => {
+    const result = await this.controller!.translateSentence(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
 
-      return responseResolver<T>(
-        TranslateProxyValidator.getInstance(
-          TranslateValidator.getInstance(),
-          TranslateController.getInstance(
-            TranslateService.getInstance(translateRepo)
-          )
-        )
-      );
+  translateMultiSentence = async (dto: SentenceWithKey[]) => {
+    const result = await this.controller!.translateMultiSentence(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
 
-    case "language-code":
-      return responseResolver<T>(
-        LanguageCodeProxyValidator.getInstance(
-          LanguageCodeValidator.getInstance(),
-          LanguageCodeController.getInstance(
-            LanguageCodeService.getInstance(
-              LocalLanguageCodeNameRepo.getInstance(),
-              LocalLanguageCodeSiteMapRepo.getInstance()
-            )
-          )
-        )
-      );
+  translateMultiLanguage = async (dto: TranslateMultiLanguageDto) => {
+    const result = await this.controller!.translateMultiLanguage(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
 
-    default:
-      throw new Error("Need Controller Type Input");
-  }
-};
+  translateJsonValue = async (dto: TranslateJsonValueDto) => {
+    const result = await this.controller!.translateJsonValue(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
 
-const responseResolver = <T>(controller: {
-  [key in string]: any;
-}) => {
-  const newController: { [key in string]: (...args: any[]) => any } = {};
-  Object.entries(controller).forEach(([key, value]) => {
-    if (typeof value !== "function") {
-      newController[key] = value;
-      return;
+  private responseResolver = <T>(responseDto: ResponseDto) => {
+    const {
+      payload: { data, success },
+    } = responseDto;
+    if (success) {
+      return data as T;
     }
-    newController[key] = async (...args: any[]) => {
-      return value(...args).then((response: ResponseDto) => {
-        if (response.status !== 200) {
-          throw new Error(response.payload.data.message);
-        }
-        return response.payload.data;
-      });
-    };
-    return;
-  });
-  return newController as T;
-};
+    throw new Error(data.message);
+  };
+}
+
+export class LanguageCode {
+  private controller: LanguageCodeProxyValidator;
+  constructor() {
+    this.controller = new LanguageCodeProxyValidator(
+      new LanguageCodeValidator(),
+      new LanguageCodeController(
+        new LanguageCodeService(
+          new LocalLanguageCodeNameRepo(),
+          new LocalLanguageCodeSiteMapRepo()
+        )
+      )
+    );
+  }
+
+  getName = async (dto: LanguageCodeWithOptions) => {
+    const result = await this.controller.getName(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
+
+  getMultiName = async (dto: MultiLanguageCodeWithOptions) => {
+    const result = await this.controller.getMultiName(dto);
+    return this.responseResolver<LanguageCodeWithName[]>(result);
+  };
+
+  getMultiCodeToKeyNameValue = async (dto: MultiLanguageCodeWithOptions) => {
+    const result = await this.controller.getMultiCodeToKeyNameValue(dto);
+    return this.responseResolver<{
+      [x: string]: string;
+    }>(result);
+  };
+
+  getSiteMap = async (dto: LanguageCodeSiteMapInputs) => {
+    const result = await this.controller.getSiteMap(dto);
+    return this.responseResolver<LanguageCodeSiteMapReturn>(result);
+  };
+
+  private responseResolver = <T>(responseDto: ResponseDto) => {
+    const {
+      payload: { data, success },
+    } = responseDto;
+    if (success) {
+      return data as T;
+    }
+    throw new Error(data.message);
+  };
+}

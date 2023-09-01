@@ -1,17 +1,19 @@
 import { LanguageCodeProxyValidator } from "./controller/languageCode/language.code.validator";
 import { TranslateProxyValidator } from "./controller/translate/translate.validator";
 import {
-  i18nSupportControllerFactory,
   i18nSupportServerFactory,
-  ControllerOptions,
+  TranslatorOptions,
   ServerOptions,
+  LanguageCode,
+  Translator,
 } from "./infrastructure/module/index";
 import { ExpressServer } from "./infrastructure/server/express/server";
 
 export {
-  i18nSupportControllerFactory,
+  LanguageCode,
+  Translator,
   i18nSupportServerFactory,
-  ControllerOptions,
+  TranslatorOptions as ControllerOptions,
   ServerOptions,
   ExpressServer,
   LanguageCodeProxyValidator,
