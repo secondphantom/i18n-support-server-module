@@ -261,14 +261,22 @@ type Return {
 ```ts
 interface LanguageCodeSiteMapInputs {
   rootUrl: string;
-  pages: string[];
+  pages: (
+    | string
+    | {
+        page: string;
+        supportedLocales: string[];
+        priority?: number;
+        lastMod?: string;
+      }
+  )[];
   defaultLocale: string;
   supportedLocales: string[];
   options?: LanguageCodeSiteMapOptions;
 }
 interface LanguageCodeSiteMapOptions {
   trailingSlash?: boolean;
-  lastMod?: string;
+  alternateRef?: boolean;
 }
 ```
 ###### return

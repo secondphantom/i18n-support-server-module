@@ -4,7 +4,7 @@ module.exports = {
   testEnvironment: "node",
   // setupFiles: ["dotenv/config"],
   // setupFilesAfterEnv: ["./src/setupTestsAfterEnv.ts"],
-  testMatch: ["<rootDir>/src/tests/**/sitemap.repo.test.ts"],
+  testMatch: ["<rootDir>/src/tests/**/language.code.service.test.ts"],
   verbose: true,
   forceExit: true,
   clearMocks: true,

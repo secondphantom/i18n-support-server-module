@@ -6,6 +6,8 @@ import {
 
 interface GetUrlListInputs extends Omit<LanguageCodeSiteMapInputs, "pages"> {
   page: string;
+  priority?: number;
+  lastMod?: string;
   options: Required<LanguageCodeSiteMapOptions>;
 }
 
@@ -35,7 +37,7 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
   }: LanguageCodeSiteMapInputs) => {
     const newOptions = {
       trailingSlash: false,
-      lastMod: new Date().toISOString(),
+      alternateRef: true,
       ...options,
     };
 
@@ -51,12 +53,19 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
           });
           return urlList;
         }
-        const { page, supportedLocales: curSupportedLocales } = curPage;
+        const {
+          page,
+          supportedLocales: curSupportedLocales,
+          priority,
+          lastMod,
+        } = curPage;
         const urlList = this.getUrlList({
           rootUrl,
           page,
           defaultLocale,
           supportedLocales: curSupportedLocales,
+          lastMod,
+          priority,
           options: newOptions,
         });
         return urlList;
@@ -69,6 +78,8 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
     page: tempPage,
     defaultLocale,
     supportedLocales,
+    priority,
+    lastMod,
     options,
   }: GetUrlListInputs) => {
     let page = tempPage;
@@ -103,18 +114,22 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
       return `		<xhtml:link rel="alternate" hreflang="${locale}" href="${url}" />`;
     });
 
-    const lastmod = `		<lastmod>${new Date(options.lastMod)
-      .toISOString()
-      .slice(0, 10)}</lastmod>`;
+    const lastmodXml = lastMod
+      ? `		<lastmod>${new Date(lastMod).toISOString().slice(0, 10)}</lastmod>`
+      : "";
+
+    const priorityXml = priority
+      ? `		<priority>${priority.toFixed()}</priority>`
+      : "";
     const urlList = locList.map((loc) => {
       const result: string[] = [];
 
       result.push("	<url>");
       result.push(loc);
-      result.push(...xhtmlList);
-      result.push(lastmod);
+      if (options.alternateRef) result.push(...xhtmlList);
+      if (lastmodXml) result.push(lastmodXml);
+      if (priorityXml) result.push(priorityXml);
       result.push("	</url>");
-
       return result;
     });
     return urlList;

@@ -24,7 +24,15 @@ export type LanguageCodeKeyWithName = { [key in string]: string };
 
 export interface LanguageCodeSiteMapInputs {
   rootUrl: string;
-  pages: (string | { page: string; supportedLocales: string[] })[];
+  pages: (
+    | string
+    | {
+        page: string;
+        supportedLocales: string[];
+        priority?: number;
+        lastMod?: string;
+      }
+  )[];
   defaultLocale: string;
   supportedLocales: string[];
   options?: LanguageCodeSiteMapOptions;
@@ -32,7 +40,7 @@ export interface LanguageCodeSiteMapInputs {
 
 export interface LanguageCodeSiteMapOptions {
   trailingSlash?: boolean;
-  lastMod?: string;
+  alternateRef?: boolean;
 }
 
 export interface LanguageCodeSiteMapReturn {

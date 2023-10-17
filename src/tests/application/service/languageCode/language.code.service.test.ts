@@ -4,6 +4,7 @@ import {
 } from "../../../../application/service/languageCode/language.code.service";
 import { LocalLanguageCodeNameRepo } from "../../../../infrastructure/db/languageCode/name.repo";
 import { LocalLanguageCodeSiteMapRepo } from "../../../../infrastructure/db/languageCode/sitemap.repo";
+import fs from "fs";
 
 describe("Language Code Name Service Test", () => {
   let languageCodeNameService: LanguageCodeService;
@@ -57,15 +58,26 @@ describe("Language Code Name Service Test", () => {
     });
   });
 
-  test("Get Site Map", () => {
+  test.only("Get Site Map", async () => {
     const params: LanguageCodeSiteMapInputs = {
       rootUrl: "http://localhost:3031",
-      pages: ["/"],
+      pages: [
+        "/",
+        "/contact",
+        { page: "/about", supportedLocales: [], lastMod: "2023-10-17" },
+        { page: "/privacy", supportedLocales: [], priority: 0.5 },
+      ],
       defaultLocale: "ko",
-      supportedLocales: ["en", "ja"],
+      supportedLocales: ["en"],
+      options: {
+        trailingSlash: false,
+        alternateRef: true,
+      },
     };
 
     const { siteMap } = languageCodeSiteMapRepo.getSiteMap(params);
+
+    await fs.promises.writeFile("exclude/sitemap.xml", siteMap);
 
     expect(siteMap).toEqual(expect.any(String));
   });
