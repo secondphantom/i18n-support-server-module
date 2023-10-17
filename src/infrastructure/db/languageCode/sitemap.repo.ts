@@ -93,6 +93,14 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
       }
     }
 
+    // encode URI
+    page = page
+      .split("/")
+      .map((path) => encodeURI(path))
+      .join("/");
+
+    if (!options.alternateRef) supportedLocales = [];
+
     const locList = ["default", ...supportedLocales]
       .filter((locale) => locale !== defaultLocale || locale === "default")
       .map((locale) => {

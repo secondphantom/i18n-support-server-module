@@ -63,7 +63,7 @@ describe("Language Code Name Service Test", () => {
       rootUrl: "http://localhost:3031",
       pages: [
         "/",
-        "/contact",
+        "/category/프로그래밍",
         { page: "/about", supportedLocales: [], lastMod: "2023-10-17" },
         { page: "/privacy", supportedLocales: [], priority: 0.5 },
       ],
@@ -71,7 +71,7 @@ describe("Language Code Name Service Test", () => {
       supportedLocales: ["en"],
       options: {
         trailingSlash: false,
-        alternateRef: true,
+        alternateRef: false,
       },
     };
 
