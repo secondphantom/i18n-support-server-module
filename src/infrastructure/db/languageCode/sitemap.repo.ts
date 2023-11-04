@@ -127,7 +127,7 @@ export class LocalLanguageCodeSiteMapRepo extends LanguageCodeSitemapRepo {
       : "";
 
     const priorityXml = priority
-      ? `		<priority>${priority.toFixed()}</priority>`
+      ? `		<priority>${priority.toFixed(1)}</priority>`
       : "";
     const urlList = locList.map((loc) => {
       const result: string[] = [];
