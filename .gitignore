@@ -2,7 +2,6 @@
 .env.dev
 .env.*
 node_modules/*
-dist/**/*
 dbSchema/*
 exclude/*
 log/*
@@ -14,3 +13,4 @@ static/**/*
 *.jpg
 *.mp4
 src/temp/**/*
+dist/*
